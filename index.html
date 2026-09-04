@@ -252,10 +252,41 @@
 
     .qr-section {
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
       padding: 25px 20px;
       background: white;
       border-top: 2px dashed rgba(139, 90, 43, 0.15);
+    }
+
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #43A047 0%, #66BB6A 100%);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(67, 160, 71, 0.3);
+    }
+
+    .download-btn:active {
+      transform: translateY(0);
+    }
+
+    .download-btn svg {
+      width: 18px;
+      height: 18px;
     }
 
     #qrcode {
@@ -465,6 +496,11 @@
       .date-box {
         padding: 14px 10px;
       }
+
+      .download-btn {
+        padding: 10px 20px;
+        font-size: 13px;
+      }
     }
   </style>
 </head>
@@ -516,6 +552,14 @@
         </div>
         <div class="qr-section">
           <div id="qrcode"></div>
+          <button class="download-btn" onclick="downloadQRCode()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            下載 QR Code
+          </button>
         </div>
       </div>
 
@@ -674,6 +718,25 @@
       }
 
       return result;
+    }
+
+    // 下載 QR Code
+    function downloadQRCode() {
+      const qrImg = document.querySelector('#qrcode img');
+      if (!qrImg) return;
+
+      // 建立canvas 並繪製 QR Code
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = qrImg.naturalWidth;
+      canvas.height = qrImg.naturalHeight;
+      ctx.drawImage(qrImg, 0, 0);
+
+      // 下載圖片
+      const link = document.createElement('a');
+      link.download = `風自然優惠券_QR_${formatDate(new Date())}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
     }
 
     // 格式化日期
