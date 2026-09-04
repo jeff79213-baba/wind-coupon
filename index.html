@@ -14,7 +14,7 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif;
-      background: linear-gradient(135deg, #FFF8F0 0%, #F5E6D3 100%);
+      background: linear-gradient(135deg, #FFF9F0 0%, #F8F4EE 100%);
       min-height: 100vh;
       color: #5D4037;
     }
@@ -66,48 +66,115 @@
     /* 優惠券卡片 */
     .coupon-card {
       background: white;
-      border-radius: 20px;
-      box-shadow: 0 10px 40px rgba(139, 90, 43, 0.15);
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(139, 90, 43, 0.12);
       overflow: hidden;
+      position: relative;
     }
 
     .coupon-header {
-      background: linear-gradient(135deg, #8B5A2B 0%, #A0522D 100%);
-      padding: 25px;
+      background: linear-gradient(135deg, #8B5A2B 0%, #A67B5B 100%);
+      padding: 35px 25px 30px;
       text-align: center;
+      position: relative;
+      overflow: hidden;
     }
 
-    .logo-img {
-      max-width: 150px;
-      height: auto;
-      margin-bottom: 15px;
-      filter: brightness(0) invert(1);
+    /* 風車裝飾 */
+    .windmill {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      animation: spin 8s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .windmill-blade {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      top: 50%;
+      left: 50%;
+      transform-origin: 0 0;
+      border-radius: 0 100% 0 0;
+    }
+
+    .windmill-blade:nth-child(1) {
+      background: #E53935;
+      transform: rotate(0deg);
+    }
+
+    .windmill-blade:nth-child(2) {
+      background: #1E88E5;
+      transform: rotate(90deg);
+    }
+
+    .windmill-blade:nth-child(3) {
+      background: #43A047;
+      transform: rotate(180deg);
+    }
+
+    .windmill-blade:nth-child(4) {
+      background: #FB8C00;
+      transform: rotate(270deg);
+    }
+
+    .windmill-center {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: white;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .shop-name {
       color: white;
-      font-size: 24px;
+      font-size: 28px;
       font-weight: 700;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      letter-spacing: 2px;
+    }
+
+    .shop-subtitle {
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 1px;
     }
 
     .coupon-body {
       padding: 30px 25px;
+      background: linear-gradient(180deg, #FFFBF7 0%, #FFFFFF 100%);
     }
 
     .coupon-type {
       text-align: center;
-      font-size: 14px;
-      color: #888;
-      margin-bottom: 10px;
+      font-size: 13px;
+      color: #A67B5B;
+      margin-bottom: 8px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
     }
 
     .coupon-discount {
       text-align: center;
-      font-size: 28px;
+      font-size: 32px;
       font-weight: 700;
       color: #8B5A2B;
       margin-bottom: 25px;
+      line-height: 1.3;
     }
 
     .date-section {
@@ -119,63 +186,76 @@
 
     .date-box {
       flex: 1;
-      background: #FFF8F0;
-      border-radius: 12px;
-      padding: 15px;
+      background: linear-gradient(135deg, #FFF8F0 0%, #FFF5EB 100%);
+      border-radius: 16px;
+      padding: 16px 12px;
       text-align: center;
+      border: 1px solid rgba(139, 90, 43, 0.1);
     }
 
     .date-label {
-      font-size: 12px;
-      color: #888;
-      margin-bottom: 5px;
+      font-size: 11px;
+      color: #A67B5B;
+      margin-bottom: 6px;
+      font-weight: 500;
     }
 
     .date-value {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 600;
       color: #5D4037;
     }
 
     .usage-section {
-      background: #F5F5F5;
-      border-radius: 12px;
-      padding: 15px;
+      background: linear-gradient(135deg, #F8F4EE 0%, #F5F0EA 100%);
+      border-radius: 16px;
+      padding: 18px;
       margin-bottom: 25px;
+      border: 1px solid rgba(139, 90, 43, 0.08);
     }
 
     .usage-title {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
-      color: #5D4037;
-      margin-bottom: 10px;
+      color: #8B5A2B;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
     }
 
     .usage-list {
       font-size: 12px;
-      color: #666;
-      line-height: 1.8;
+      color: #7A6A5A;
+      line-height: 1.9;
     }
 
     .usage-list li {
       list-style: none;
-      padding-left: 15px;
+      padding-left: 16px;
       position: relative;
     }
 
     .usage-list li::before {
-      content: "•";
+      content: "✿";
       position: absolute;
       left: 0;
-      color: #8B5A2B;
+      color: #E53935;
+      font-size: 10px;
+    }
+
+    .usage-list li:nth-child(2)::before {
+      color: #1E88E5;
+    }
+
+    .usage-list li:nth-child(3)::before {
+      color: #43A047;
     }
 
     .qr-section {
       display: flex;
       justify-content: center;
-      padding: 20px;
-      background: #FAFAFA;
-      border-top: 1px dashed #E0E0E0;
+      padding: 25px 20px;
+      background: white;
+      border-top: 2px dashed rgba(139, 90, 43, 0.15);
     }
 
     #qrcode {
@@ -340,24 +420,50 @@
       }
 
       .coupon-header {
-        padding: 20px 15px;
+        padding: 40px 20px 30px;
       }
 
       .shop-name {
-        font-size: 20px;
+        font-size: 24px;
+        letter-spacing: 1px;
+      }
+
+      .shop-subtitle {
+        font-size: 11px;
+      }
+
+      .windmill {
+        width: 40px;
+        height: 40px;
+        top: 12px;
+        right: 15px;
+      }
+
+      .windmill-blade {
+        width: 16px;
+        height: 16px;
+      }
+
+      .windmill-center {
+        width: 10px;
+        height: 10px;
       }
 
       .coupon-body {
-        padding: 20px 15px;
+        padding: 25px 20px;
       }
 
       .coupon-discount {
-        font-size: 24px;
+        font-size: 26px;
       }
 
       .date-section {
         flex-direction: column;
-        gap: 10px;
+        gap: 12px;
+      }
+
+      .date-box {
+        padding: 14px 10px;
       }
     }
   </style>
@@ -374,8 +480,15 @@
     <div id="tab-show" class="tab-content active">
       <div class="coupon-card">
         <div class="coupon-header">
-          <img src="images.jfif" alt="LOGO" class="logo-img">
+          <div class="windmill">
+            <div class="windmill-blade"></div>
+            <div class="windmill-blade"></div>
+            <div class="windmill-blade"></div>
+            <div class="windmill-blade"></div>
+            <div class="windmill-center"></div>
+          </div>
           <div class="shop-name" id="display-shop-name">風自然親子時尚旅宿</div>
+          <div class="shop-subtitle">Wind Natural Parent-child Inn</div>
         </div>
         <div class="coupon-body">
           <div class="coupon-type" id="display-coupon-type">一次性優惠劵</div>
@@ -543,8 +656,8 @@
           text: qrContent,
           width: 180,
           height: 180,
-          colorDark: '#5D4037',
-          colorLight: '#ffffff',
+          colorDark: '#8B5A2B',
+          colorLight: '#FFFFFF',
           correctLevel: QRCode.CorrectLevel.M
         });
       }
