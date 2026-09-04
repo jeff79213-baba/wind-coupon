@@ -64,9 +64,6 @@
     }
 
     /* 分享模式容器 */
-    .share-mode .container {
-      padding-top: 10px;
-    }
 
     /* 優惠券卡片 */
     .coupon-card {
@@ -75,17 +72,16 @@
       box-shadow: 0 8px 32px rgba(139, 90, 43, 0.12);
       overflow: hidden;
       position: relative;
-      opacity: 1;
-      transition: opacity 0.3s ease;
     }
 
-    /* 分享模式載入前隱藏 */
-    .share-mode .coupon-card {
-      opacity: 0;
+    /* 分享模式：先隱藏整個優惠券區域 */
+    #tab-show.share-hidden {
+      display: none !important;
     }
 
-    .share-mode .coupon-card.loaded {
-      opacity: 1;
+    /* 分享模式：隱藏按鈕區塊 */
+    #tab-show.share-mode .qr-section {
+      display: none !important;
     }
 
     .coupon-header {
@@ -916,6 +912,9 @@
       const encoded = params.get('d');
 
       if (encoded) {
+        // 先隱藏優惠券區域，防止閃爍
+        document.getElementById('tab-show').classList.add('share-hidden');
+
         try {
           // 解碼優惠資訊
           const couponData = JSON.parse(decodeURIComponent(atob(encoded)));
@@ -944,15 +943,12 @@
             correctLevel: QRCode.CorrectLevel.M
           });
 
-          // 隱藏下載按鈕（分享模式不需要）
-          document.querySelector('.btn-group').style.display = 'none';
+          // 加入分享模式樣式（隱藏按鈕）
+          document.getElementById('tab-show').classList.add('share-mode');
 
-          // 加入分享模式樣式
-          document.body.classList.add('share-mode');
-
-          // 載入完成後顯示優惠券
+          // 移除隱藏，顯示優惠券
           requestAnimationFrame(() => {
-            document.querySelector('.coupon-card').classList.add('loaded');
+            document.getElementById('tab-show').classList.remove('share-hidden');
           });
 
           return true;
