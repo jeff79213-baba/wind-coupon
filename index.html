@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>風自然優惠券</title>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif;
+      background: linear-gradient(135deg, #FFF8F0 0%, #F5E6D3 100%);
+      min-height: 100vh;
+      color: #5D4037;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* 切換按鈕 */
+    .tab-buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid #8B5A2B;
+      background: transparent;
+      color: #8B5A2B;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .tab-btn.active {
+      background: #8B5A2B;
+      color: white;
+    }
+
+    .tab-btn:hover:not(.active) {
+      background: rgba(139, 90, 43, 0.1);
+    }
+
+    /* 內容區域 */
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* 優惠券卡片 */
+    .coupon-card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(139, 90, 43, 0.15);
+      overflow: hidden;
+    }
+
+    .coupon-header {
+      background: linear-gradient(135deg, #8B5A2B 0%, #A0522D 100%);
+      padding: 25px;
+      text-align: center;
+    }
+
+    .logo-img {
+      max-width: 150px;
+      height: auto;
+      margin-bottom: 15px;
+      filter: brightness(0) invert(1);
+    }
+
+    .shop-name {
+      color: white;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .coupon-body {
+      padding: 30px 25px;
+    }
+
+    .coupon-type {
+      text-align: center;
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 10px;
+    }
+
+    .coupon-discount {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 700;
+      color: #8B5A2B;
+      margin-bottom: 25px;
+    }
+
+    .date-section {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .date-box {
+      flex: 1;
+      background: #FFF8F0;
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .date-label {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 5px;
+    }
+
+    .date-value {
+      font-size: 16px;
+      font-weight: 600;
+      color: #5D4037;
+    }
+
+    .usage-section {
+      background: #F5F5F5;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 25px;
+    }
+
+    .usage-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #5D4037;
+      margin-bottom: 10px;
+    }
+
+    .usage-list {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.8;
+    }
+
+    .usage-list li {
+      list-style: none;
+      padding-left: 15px;
+      position: relative;
+    }
+
+    .usage-list li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: #8B5A2B;
+    }
+
+    .qr-section {
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+      background: #FAFAFA;
+      border-top: 1px dashed #E0E0E0;
+    }
+
+    #qrcode {
+      display: flex;
+      justify-content: center;
+    }
+
+    #qrcode img {
+      border-radius: 8px;
+    }
+
+    /* 後台設定區 */
+    .settings-card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(139, 90, 43, 0.15);
+      padding: 30px 25px;
+    }
+
+    .settings-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #5D4037;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #5D4037;
+      margin-bottom: 8px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #E0E0E0;
+      border-radius: 12px;
+      font-size: 16px;
+      color: #333;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #8B5A2B;
+    }
+
+    .switch-group {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px;
+      background: #F5F5F5;
+      border-radius: 12px;
+    }
+
+    .switch-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #5D4037;
+    }
+
+    .switch {
+      position: relative;
+      width: 56px;
+      height: 28px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.3s;
+      border-radius: 28px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: 0.3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #4CAF50;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(28px);
+    }
+
+    .save-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #8B5A2B 0%, #A0522D 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      margin-top: 10px;
+    }
+
+    .save-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(139, 90, 43, 0.3);
+    }
+
+    .save-btn:active {
+      transform: translateY(0);
+    }
+
+    .save-message {
+      text-align: center;
+      color: #4CAF50;
+      font-size: 14px;
+      margin-top: 10px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .save-message.show {
+      opacity: 1;
+    }
+
+    /* 無啟用提示 */
+    .disabled-notice {
+      text-align: center;
+      padding: 40px 20px;
+      color: #999;
+      font-size: 14px;
+    }
+
+    /* 響應式 */
+    @media (max-width: 480px) {
+      .container {
+        padding: 15px;
+      }
+
+      .coupon-header {
+        padding: 20px 15px;
+      }
+
+      .shop-name {
+        font-size: 20px;
+      }
+
+      .coupon-body {
+        padding: 20px 15px;
+      }
+
+      .coupon-discount {
+        font-size: 24px;
+      }
+
+      .date-section {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 切換按鈕 -->
+    <div class="tab-buttons">
+      <button class="tab-btn active" onclick="switchTab('show')">優惠券</button>
+      <button class="tab-btn" onclick="switchTab('settings')">後台設定</button>
+    </div>
+
+    <!-- 優惠券顯示區 -->
+    <div id="tab-show" class="tab-content active">
+      <div class="coupon-card">
+        <div class="coupon-header">
+          <img src="images.jfif" alt="LOGO" class="logo-img">
+          <div class="shop-name" id="display-shop-name">風自然親子時尚旅宿</div>
+        </div>
+        <div class="coupon-body">
+          <div class="coupon-type" id="display-coupon-type">一次性優惠劵</div>
+          <div class="coupon-discount" id="display-discount">訂房享 9 折優惠</div>
+
+          <div class="date-section">
+            <div class="date-box">
+              <div class="date-label">發送日期</div>
+              <div class="date-value" id="display-send-date">2026/09/04</div>
+            </div>
+            <div class="date-box">
+              <div class="date-label">有效期限</div>
+              <div class="date-value" id="display-expire-date">2026/12/04</div>
+            </div>
+          </div>
+
+          <div class="usage-section">
+            <div class="usage-title">使用方式</div>
+            <ul class="usage-list">
+              <li>訂房時請出示本券(QR CODE),並告知服務人員</li>
+              <li>本券不得與其他優惠併用</li>
+              <li>每組訂房限使用一張</li>
+            </ul>
+          </div>
+        </div>
+        <div class="qr-section">
+          <div id="qrcode"></div>
+        </div>
+      </div>
+
+      <div class="disabled-notice" id="disabled-notice" style="display: none;">
+        此優惠券已停用
+      </div>
+    </div>
+
+    <!-- 後台設定區 -->
+    <div id="tab-settings" class="tab-content">
+      <div class="settings-card">
+        <div class="settings-title">後台設定</div>
+
+        <div class="form-group">
+          <label class="form-label">店家名稱</label>
+          <input type="text" class="form-input" id="input-shop-name" placeholder="輸入店家名稱">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">優惠內容</label>
+          <input type="text" class="form-input" id="input-discount" placeholder="例如：訂房享 9 折優惠">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">效期月數</label>
+          <input type="number" class="form-input" id="input-months" min="1" max="12" value="3">
+        </div>
+
+        <div class="form-group">
+          <div class="switch-group">
+            <span class="switch-label">啟用優惠券</span>
+            <label class="switch">
+              <input type="checkbox" id="input-enabled" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <button class="save-btn" onclick="saveSettings()">儲存設定</button>
+        <div class="save-message" id="save-message">儲存成功！</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 設定預設值
+    const DEFAULT_SETTINGS = {
+      shopName: '風自然親子時尚旅宿',
+      discount: '訂房享 9 折優惠',
+      months: 3,
+      enabled: true
+    };
+
+    let currentSettings = {};
+    let qrCode = null;
+
+    // 初始化
+    function init() {
+      loadSettings();
+      updateDisplay();
+      generateQRCode();
+    }
+
+    // 載入設定
+    function loadSettings() {
+      const saved = localStorage.getItem('wind-coupon-settings');
+      if (saved) {
+        currentSettings = JSON.parse(saved);
+      } else {
+        currentSettings = { ...DEFAULT_SETTINGS };
+      }
+      fillForm();
+    }
+
+    // 填入表單
+    function fillForm() {
+      document.getElementById('input-shop-name').value = currentSettings.shopName;
+      document.getElementById('input-discount').value = currentSettings.discount;
+      document.getElementById('input-months').value = currentSettings.months;
+      document.getElementById('input-enabled').checked = currentSettings.enabled;
+    }
+
+    // 儲存設定
+    function saveSettings() {
+      currentSettings = {
+        shopName: document.getElementById('input-shop-name').value || DEFAULT_SETTINGS.shopName,
+        discount: document.getElementById('input-discount').value || DEFAULT_SETTINGS.discount,
+        months: parseInt(document.getElementById('input-months').value) || DEFAULT_SETTINGS.months,
+        enabled: document.getElementById('input-enabled').checked
+      };
+
+      localStorage.setItem('wind-coupon-settings', JSON.stringify(currentSettings));
+
+      // 顯示儲存成功訊息
+      const msg = document.getElementById('save-message');
+      msg.classList.add('show');
+      setTimeout(() => msg.classList.remove('show'), 2000);
+
+      updateDisplay();
+      generateQRCode();
+    }
+
+    // 更新顯示
+    function updateDisplay() {
+      const today = new Date();
+      const expireDate = addMonths(today, currentSettings.months);
+
+      document.getElementById('display-shop-name').textContent = currentSettings.shopName;
+      document.getElementById('display-discount').textContent = currentSettings.discount;
+      document.getElementById('display-send-date').textContent = formatDate(today);
+      document.getElementById('display-expire-date').textContent = formatDate(expireDate);
+
+      // 顯示/隱藏優惠券
+      const couponCard = document.querySelector('.coupon-card');
+      const disabledNotice = document.getElementById('disabled-notice');
+
+      if (currentSettings.enabled) {
+        couponCard.style.display = 'block';
+        disabledNotice.style.display = 'none';
+      } else {
+        couponCard.style.display = 'none';
+        disabledNotice.style.display = 'block';
+      }
+    }
+
+    // 產生 QR Code
+    function generateQRCode() {
+      const today = new Date();
+      const expireDate = addMonths(today, currentSettings.months);
+
+      const qrContent = `風自然|${currentSettings.discount}|${formatDate(today)}|${formatDate(expireDate)}`;
+
+      const qrContainer = document.getElementById('qrcode');
+      qrContainer.innerHTML = '';
+
+      if (currentSettings.enabled) {
+        qrCode = new QRCode(qrContainer, {
+          text: qrContent,
+          width: 180,
+          height: 180,
+          colorDark: '#5D4037',
+          colorLight: '#ffffff',
+          correctLevel: QRCode.CorrectLevel.M
+        });
+      }
+    }
+
+    // 日期加上月份（處理月底溢位）
+    function addMonths(date, months) {
+      const result = new Date(date);
+      result.setMonth(result.getMonth() + months);
+
+      // 修正月底溢位：如果日期小於原始日期，表示溢位到下個月
+      if (result.getDate() < date.getDate()) {
+        result.setDate(0); // 設為上個月最後一天
+      }
+
+      return result;
+    }
+
+    // 格式化日期
+    function formatDate(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}/${month}/${day}`;
+    }
+
+    // 切換頁籤
+    function switchTab(tab) {
+      // 更新按鈕狀態
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      // 更新內容顯示
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      document.getElementById(`tab-${tab}`).classList.add('active');
+    }
+
+    // 頁面載入時初始化
+    window.onload = init;
+  </script>
+</body>
+</html>

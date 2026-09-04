@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "opencode-sk"
+  },
+  "targets": {
+    "opencode-sk": {
+      "hosting": {
+        "wind-coupon-sk": [
+          "wind-coupon-sk"
+        ]
+      }
+    }
+  }
+}
