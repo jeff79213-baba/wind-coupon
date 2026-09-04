@@ -63,6 +63,11 @@
       display: block;
     }
 
+    /* 分享模式容器 */
+    .share-mode .container {
+      padding-top: 10px;
+    }
+
     /* 優惠券卡片 */
     .coupon-card {
       background: white;
@@ -70,6 +75,17 @@
       box-shadow: 0 8px 32px rgba(139, 90, 43, 0.12);
       overflow: hidden;
       position: relative;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+
+    /* 分享模式載入前隱藏 */
+    .share-mode .coupon-card {
+      opacity: 0;
+    }
+
+    .share-mode .coupon-card.loaded {
+      opacity: 1;
     }
 
     .coupon-header {
@@ -102,44 +118,44 @@
       transform-origin: 0 0;
     }
 
-    /* 紅色葉片 - 最大，左上 */
+    /* 紅色葉片 - 最大 */
     .windmill-blade:nth-child(1) {
       width: 0;
       height: 0;
       border-left: 8px solid transparent;
       border-right: 8px solid transparent;
-      border-bottom: 32px solid #E53935;
+      border-bottom: 34px solid #E53935;
       transform: rotate(-15deg) translateX(-8px) translateY(-5px);
     }
 
-    /* 藍色葉片 - 中等，右上 */
+    /* 綠色葉片 - 第二大 */
     .windmill-blade:nth-child(2) {
       width: 0;
       height: 0;
       border-left: 7px solid transparent;
       border-right: 7px solid transparent;
-      border-bottom: 26px solid #1E88E5;
+      border-bottom: 28px solid #43A047;
       transform: rotate(70deg) translateX(-7px) translateY(-3px);
     }
 
-    /* 綠色葉片 - 最小，左下 */
+    /* 藍色葉片 - 第三大 */
     .windmill-blade:nth-child(3) {
       width: 0;
       height: 0;
       border-left: 6px solid transparent;
       border-right: 6px solid transparent;
-      border-bottom: 22px solid #43A047;
+      border-bottom: 22px solid #1E88E5;
       transform: rotate(160deg) translateX(-6px) translateY(-4px);
     }
 
-    /* 橘色葉片 - 中等，右下 */
+    /* 橘色葉片 - 最小 */
     .windmill-blade:nth-child(4) {
       width: 0;
       height: 0;
-      border-left: 7px solid transparent;
-      border-right: 7px solid transparent;
-      border-bottom: 28px solid #FB8C00;
-      transform: rotate(250deg) translateX(-7px) translateY(-2px);
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-bottom: 18px solid #FB8C00;
+      transform: rotate(250deg) translateX(-5px) translateY(-2px);
     }
 
     .windmill-center {
@@ -547,25 +563,25 @@
       .windmill-blade:nth-child(1) {
         border-left: 7px solid transparent;
         border-right: 7px solid transparent;
-        border-bottom: 28px solid #E53935;
+        border-bottom: 30px solid #E53935;
       }
 
       .windmill-blade:nth-child(2) {
         border-left: 6px solid transparent;
         border-right: 6px solid transparent;
-        border-bottom: 22px solid #1E88E5;
+        border-bottom: 24px solid #43A047;
       }
 
       .windmill-blade:nth-child(3) {
         border-left: 5px solid transparent;
         border-right: 5px solid transparent;
-        border-bottom: 18px solid #43A047;
+        border-bottom: 18px solid #1E88E5;
       }
 
       .windmill-blade:nth-child(4) {
-        border-left: 6px solid transparent;
-        border-right: 6px solid transparent;
-        border-bottom: 24px solid #FB8C00;
+        border-left: 4px solid transparent;
+        border-right: 4px solid transparent;
+        border-bottom: 14px solid #FB8C00;
       }
 
       .windmill-center {
@@ -930,6 +946,14 @@
 
           // 隱藏下載按鈕（分享模式不需要）
           document.querySelector('.btn-group').style.display = 'none';
+
+          // 加入分享模式樣式
+          document.body.classList.add('share-mode');
+
+          // 載入完成後顯示優惠券
+          requestAnimationFrame(() => {
+            document.querySelector('.coupon-card').classList.add('loaded');
+          });
 
           return true;
         } catch (e) {
