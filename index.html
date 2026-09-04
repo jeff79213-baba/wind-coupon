@@ -80,14 +80,14 @@
       overflow: hidden;
     }
 
-    /* 風車裝飾 */
+    /* 風車裝飾 - 仿 LOGO 設計 */
     .windmill {
       position: absolute;
-      top: 15px;
-      right: 20px;
-      width: 50px;
-      height: 50px;
-      animation: spin 8s linear infinite;
+      top: 20px;
+      right: 25px;
+      width: 60px;
+      height: 60px;
+      animation: spin 10s linear infinite;
     }
 
     @keyframes spin {
@@ -97,45 +97,52 @@
 
     .windmill-blade {
       position: absolute;
-      width: 20px;
-      height: 20px;
+      width: 0;
+      height: 0;
       top: 50%;
       left: 50%;
       transform-origin: 0 0;
-      border-radius: 0 100% 0 0;
     }
 
     .windmill-blade:nth-child(1) {
-      background: #E53935;
-      transform: rotate(0deg);
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-bottom: 28px solid #E53935;
+      transform: rotate(0deg) translateX(-12px);
     }
 
     .windmill-blade:nth-child(2) {
-      background: #1E88E5;
-      transform: rotate(90deg);
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-bottom: 28px solid #1E88E5;
+      transform: rotate(90deg) translateX(-12px);
     }
 
     .windmill-blade:nth-child(3) {
-      background: #43A047;
-      transform: rotate(180deg);
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-bottom: 28px solid #43A047;
+      transform: rotate(180deg) translateX(-12px);
     }
 
     .windmill-blade:nth-child(4) {
-      background: #FB8C00;
-      transform: rotate(270deg);
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-bottom: 28px solid #FB8C00;
+      transform: rotate(270deg) translateX(-12px);
     }
 
     .windmill-center {
       position: absolute;
-      width: 12px;
-      height: 12px;
-      background: white;
+      width: 16px;
+      height: 16px;
+      background: #9E9E9E;
       border-radius: 50%;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       z-index: 1;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
     }
 
     .shop-name {
@@ -464,20 +471,36 @@
       }
 
       .windmill {
-        width: 40px;
-        height: 40px;
-        top: 12px;
-        right: 15px;
+        width: 50px;
+        height: 50px;
+        top: 15px;
+        right: 18px;
       }
 
-      .windmill-blade {
-        width: 16px;
-        height: 16px;
+      .windmill-blade:nth-child(1),
+      .windmill-blade:nth-child(2),
+      .windmill-blade:nth-child(3),
+      .windmill-blade:nth-child(4) {
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-bottom: 24px solid #E53935;
+      }
+
+      .windmill-blade:nth-child(2) {
+        border-bottom-color: #1E88E5;
+      }
+
+      .windmill-blade:nth-child(3) {
+        border-bottom-color: #43A047;
+      }
+
+      .windmill-blade:nth-child(4) {
+        border-bottom-color: #FB8C00;
       }
 
       .windmill-center {
-        width: 10px;
-        height: 10px;
+        width: 14px;
+        height: 14px;
       }
 
       .coupon-body {
