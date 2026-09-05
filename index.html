@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>風自然優惠券</title>
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <style>
     * {
       margin: 0;
@@ -54,6 +55,38 @@
       background: rgba(139, 90, 43, 0.1);
     }
 
+    /* 複製圖片按鈕 */
+    .copy-img-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      border: none;
+      background: linear-gradient(135deg, #8B5A2B 0%, #A0522D 100%);
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 25px;
+      cursor: pointer;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 14px rgba(139, 90, 43, 0.25);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .copy-img-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(139, 90, 43, 0.35);
+    }
+
+    .copy-img-btn:active {
+      transform: translateY(0);
+    }
+
+    .copy-img-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
     /* 內容區域 */
     .tab-content {
       display: none;
@@ -63,8 +96,6 @@
       display: block;
     }
 
-    /* 分享模式容器 */
-
     /* 優惠券卡片 */
     .coupon-card {
       background: white;
@@ -72,16 +103,6 @@
       box-shadow: 0 8px 32px rgba(139, 90, 43, 0.12);
       overflow: hidden;
       position: relative;
-    }
-
-    /* 分享模式：先隱藏整個優惠券區域 */
-    #tab-show.share-hidden {
-      display: none !important;
-    }
-
-    /* 分享模式：隱藏按鈕區塊 */
-    #tab-show.share-mode .btn-group {
-      display: none !important;
     }
 
     .coupon-header {
@@ -287,71 +308,6 @@
       padding: 25px 20px;
       background: white;
       border-top: 2px dashed rgba(139, 90, 43, 0.15);
-    }
-
-    .download-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 24px;
-      background: linear-gradient(135deg, #1E88E5 0%, #42A5F5 100%);
-      color: white;
-      border: none;
-      border-radius: 25px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .download-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(30, 136, 229, 0.3);
-    }
-
-    .download-btn:active {
-      transform: translateY(0);
-    }
-
-    .download-btn svg {
-      width: 18px;
-      height: 18px;
-    }
-
-    .share-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 24px;
-      background: linear-gradient(135deg, #43A047 0%, #66BB6A 100%);
-      color: white;
-      border: none;
-      border-radius: 25px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .share-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(67, 160, 71, 0.3);
-    }
-
-    .share-btn:active {
-      transform: translateY(0);
-    }
-
-    .share-btn svg {
-      width: 18px;
-      height: 18px;
-    }
-
-    .btn-group {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
     }
 
     .copy-success {
@@ -602,24 +558,15 @@
         padding: 14px 10px;
       }
 
-      .download-btn {
-        padding: 10px 16px;
-        font-size: 12px;
-      }
-
-      .share-btn {
-        padding: 10px 16px;
-        font-size: 12px;
-      }
-
-      .btn-group {
-        gap: 10px;
+      .copy-img-btn {
+        padding: 10px 20px;
+        font-size: 13px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="copy-success" id="copy-success">已複製分享網址！</div>
+  <div class="copy-success" id="copy-success">已複製圖片！</div>
   <div class="container">
     <!-- 切換按鈕 -->
     <div class="tab-buttons">
@@ -629,6 +576,13 @@
 
     <!-- 優惠券顯示區 -->
     <div id="tab-show" class="tab-content active">
+      <button class="copy-img-btn" onclick="copyCouponImage()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="9" y="9" width="13" height="13" rx="2"/>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+        複製圖片
+      </button>
       <div class="coupon-card">
         <div class="coupon-header">
           <div class="windmill">
@@ -667,23 +621,6 @@
         </div>
         <div class="qr-section">
           <div id="qrcode"></div>
-          <div class="btn-group">
-            <button class="download-btn" onclick="downloadQRCode()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="7 10 12 15 17 10"/>
-                <line x1="12" y1="15" x2="12" y2="3"/>
-              </svg>
-              下載 QR Code
-            </button>
-            <button class="share-btn" onclick="copyShareLink()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-              </svg>
-              複製分享網址
-            </button>
-          </div>
         </div>
       </div>
 
@@ -742,15 +679,9 @@
 
     // 初始化
     function init() {
-      // 先檢查是否為分享模式
-      const isShareMode = checkShareMode();
-
-      // 如果不是分享模式，才載入設定
-      if (!isShareMode) {
-        loadSettings();
-        updateDisplay();
-        generateQRCode();
-      }
+      loadSettings();
+      updateDisplay();
+      generateQRCode();
     }
 
     // 載入設定
@@ -850,114 +781,47 @@
       return result;
     }
 
-    // 下載 QR Code
-    function downloadQRCode() {
-      const qrImg = document.querySelector('#qrcode img');
-      if (!qrImg) return;
+    // 複製優惠券為圖片
+    function copyCouponImage() {
+      const card = document.querySelector('.coupon-card');
+      if (!card) return;
 
-      // 建立 canvas 並繪製 QR Code
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      canvas.width = qrImg.naturalWidth;
-      canvas.height = qrImg.naturalHeight;
-      ctx.drawImage(qrImg, 0, 0);
-
-      // 下載圖片
-      const link = document.createElement('a');
-      link.download = `風自然優惠券_QR_${formatDate(new Date())}.png`;
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-    }
-
-    // 產生分享連結
-    function generateShareLink() {
-      const today = new Date();
-      const expireDate = addMonths(today, currentSettings.months);
-
-      // 組合優惠資訊
-      const couponData = {
-        s: currentSettings.shopName,
-        d: currentSettings.discount,
-        t: formatDate(today),
-        e: formatDate(expireDate)
-      };
-
-      // base64 編碼
-      const encoded = btoa(encodeURIComponent(JSON.stringify(couponData)));
-
-      // 產生網址
-      const baseUrl = window.location.origin + window.location.pathname;
-      return `${baseUrl}?d=${encoded}`;
-    }
-
-    // 複製分享連結
-    function copyShareLink() {
-      const link = generateShareLink();
-
-      // 複製到剪貼簿
-      navigator.clipboard.writeText(link).then(() => {
-        // 顯示成功訊息
-        const msg = document.getElementById('copy-success');
-        msg.classList.add('show');
-        setTimeout(() => msg.classList.remove('show'), 2000);
+      html2canvas(card, {
+        scale: 2,
+        backgroundColor: null,
+        useCORS: true
+      }).then(canvas => {
+        // 嘗試複製到剪貼簿（LINE / 對話窗可直接貼上）
+        canvas.toBlob(blob => {
+          if (blob && navigator.clipboard && window.ClipboardItem) {
+            navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]).then(() => {
+              showCopySuccess();
+            }).catch(() => {
+              downloadImage(canvas);
+            });
+          } else {
+            downloadImage(canvas);
+          }
+        }, 'image/png');
       }).catch(err => {
-        // 備用方案：使用 prompt 讓使用者手動複製
-        prompt('請複製以下連結：', link);
+        console.error('複製圖片失敗：', err);
       });
     }
 
-    // 檢查是否為分享模式
-    function checkShareMode() {
-      const params = new URLSearchParams(window.location.search);
-      const encoded = params.get('d');
+    // 下載 PNG（剪貼簿不支援時的備案）
+    function downloadImage(canvas) {
+      const link = document.createElement('a');
+      link.download = `風自然優惠券_${formatDate(new Date())}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      showCopySuccess();
+    }
 
-      if (encoded) {
-        // 先隱藏優惠券區域，防止閃爍
-        document.getElementById('tab-show').classList.add('share-hidden');
-
-        try {
-          // 解碼優惠資訊
-          const couponData = JSON.parse(decodeURIComponent(atob(encoded)));
-
-          // 更新顯示
-          document.getElementById('display-shop-name').textContent = couponData.s;
-          document.getElementById('display-discount').textContent = couponData.d;
-          document.getElementById('display-send-date').textContent = couponData.t;
-          document.getElementById('display-expire-date').textContent = couponData.e;
-
-          // 隱藏標籤按鈕和設定區
-          document.querySelector('.tab-buttons').style.display = 'none';
-          document.getElementById('tab-settings').style.display = 'none';
-          document.getElementById('tab-show').classList.add('active');
-
-          // 產生 QR Code
-          const qrContainer = document.getElementById('qrcode');
-          qrContainer.innerHTML = '';
-          const qrContent = `風自然|${couponData.d}|${couponData.t}|${couponData.e}`;
-          new QRCode(qrContainer, {
-            text: qrContent,
-            width: 180,
-            height: 180,
-            colorDark: '#8B5A2B',
-            colorLight: '#FFFFFF',
-            correctLevel: QRCode.CorrectLevel.M
-          });
-
-          // 加入分享模式樣式（隱藏按鈕）
-          document.getElementById('tab-show').classList.add('share-mode');
-
-          // 移除隱藏，顯示優惠券
-          requestAnimationFrame(() => {
-            document.getElementById('tab-show').classList.remove('share-hidden');
-          });
-
-          return true;
-        } catch (e) {
-          console.error('解碼失敗：', e);
-          return false;
-        }
-      }
-      return false;
+    // 顯示複製成功提示
+    function showCopySuccess() {
+      const msg = document.getElementById('copy-success');
+      msg.classList.add('show');
+      setTimeout(() => msg.classList.remove('show'), 2000);
     }
 
     // 格式化日期
