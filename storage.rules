@@ -1,0 +1,14 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // 風自然優惠券：需登入才可讀寫（匿名登入）
+    match /coupons/{fileName} {
+      allow read, write: if request.auth != null;
+    }
+
+    // 其餘路徑一律拒絕（避免被陌生人灌檔）
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

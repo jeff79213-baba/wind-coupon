@@ -6,6 +6,9 @@
   <title>風自然優惠券</title>
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-storage-compat.js"></script>
   <style>
     * {
       margin: 0;
@@ -676,6 +679,21 @@
     let currentSettings = {};
     let qrCode = null;
 
+    // Firebase 初始化（雲端存檔用）
+    const firebaseConfig = {
+      apiKey: "AIzaSyD3quPJCOUoUH_Um5UceWXYuUXfRpJEuyo",
+      authDomain: "opencode-sk.firebaseapp.com",
+      projectId: "opencode-sk",
+      storageBucket: "opencode-sk.firebasestorage.app"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const fbStorage = firebase.storage().ref();
+
+    // 匿名登入：符合 Storage Security Rules（request.auth != null）
+    firebase.auth().signInAnonymously().catch(err => {
+      console.error('雲端匿名登入失敗：', err);
+    });
+
     // 初始化
     function init() {
       loadSettings();
@@ -792,6 +810,9 @@
       }).then(canvas => {
         // 嘗試複製到剪貼簿（LINE / 對話窗可直接貼上）
         canvas.toBlob(blob => {
+          if (blob) {
+            uploadCouponImage(blob);
+          }
           if (blob && navigator.clipboard && window.ClipboardItem) {
             navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]).then(() => {
               showCopySuccess();
@@ -805,6 +826,19 @@
       }).catch(err => {
         console.error('複製圖片失敗：', err);
       });
+    }
+
+    // 上傳優惠券圖檔到雲端（每天一張，一週年後自動刪除）
+    function uploadCouponImage(blob) {
+      const dateStr = formatDate(new Date()).replace(/\//g, '-');
+      const fileRef = fbStorage.child(`coupons/${dateStr}.png`);
+      fileRef.put(blob, { contentType: 'image/png' })
+        .then(() => {
+          console.log('優惠券圖檔已上傳雲端：coupons/' + dateStr + '.png');
+        })
+        .catch(err => {
+          console.error('上傳雲端失敗：', err);
+        });
     }
 
     // 下載 PNG（剪貼簿不支援時的備案）
